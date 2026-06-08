@@ -5,9 +5,9 @@
 import React from "react";
 import { CategoryFormData } from "../types";
 import { TextField, SelectBox, Button } from "../vibes";
-import { useExpenseForm } from "../hooks/useExpenseForm";
+import { useCategoryForm } from "../hooks/useCategoryForm";
 
-interface ExpenseFormProps {
+interface CategoryFormProps {
   initialData?: Partial<CategoryFormData>;
   onSubmit: (data: CategoryFormData) => Promise<void>;
   onCancel?: () => void;
@@ -19,9 +19,9 @@ export function CategoryForm({
   onSubmit,
   onCancel,
   submitLabel = "Add Category",
-}: ExpenseFormProps) {
+}: CategoryFormProps) {
   const { formData, errors, isSubmitting, handleChange, handleSubmit } =
-    useExpenseForm({
+    useCategoryForm({
       initialData,
       onSubmit,
     });
