@@ -1,36 +1,36 @@
 version: "3.8"
 
 services:
-  db:
-    image: mysql:8.0
-    container_name: expense_system_db
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: expense_system_development
-      MYSQL_USER: expense_user
-      MYSQL_PASSWORD: expense_password
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "mysqladmin",
-          "ping",
-          "-h",
-          "localhost",
-          "-u",
-          "root",
-          "-prootpassword",
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - expense_network
+  # db:
+  #   image: mysql:8.0
+  #   container_name: expense_system_db
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: rootpassword
+  #     MYSQL_DATABASE: expense_system_development
+  #     MYSQL_USER: expense_user
+  #     MYSQL_PASSWORD: expense_password
+  #   ports:
+  #     - "3306:3306"
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #     - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+  #   healthcheck:
+  #     test:
+  #       [
+  #         "CMD",
+  #         "mysqladmin",
+  #         "ping",
+  #         "-h",
+  #         "localhost",
+  #         "-u",
+  #         "root",
+  #         "-prootpassword",
+  #       ]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   networks:
+  #     - expense_network
 
   backend:
     build:
@@ -39,28 +39,30 @@ services:
     container_name: expense_system_backend
     environment:
       RAILS_ENV: development
-      DATABASE_HOST: db
+      DATABASE_HOST: 127.0.0.1
       DATABASE_PORT: 3306
       DATABASE_NAME: expense_system_development
       DATABASE_USERNAME: expense_user
       DATABASE_PASSWORD: expense_password
     ports:
       - "3000:3000"
-    depends_on:
-      db:
-        condition: service_healthy
+    # depends_on:
+    #   db:
+    #     condition: service_healthy
     volumes:
       - ./backend:/rails
+      - /rails/tmp
       - backend_gems:/usr/local/bundle
     command: >
       sh -c "
         bundle install &&
-        rails db:migrate &&
-        rails db:seed &&
-        rails server -b 0.0.0.0
+        bundle exec rails db:migrate &&
+        bundle exec rails db:seed &&
+        bundle exec rails server -b 0.0.0.0
       "
-    networks:
-      - expense_network
+    # networks:
+    #   - expense_network
+    network_mode: host
 
   frontend:
     build:
@@ -77,14 +79,14 @@ services:
       - ./frontend:/app
       - frontend_node_modules:/app/node_modules
     command: npm run dev -- --host
-    networks:
-      - expense_network
-
+    # networks:
+    #   - expense_network
+    network_mode: host
 volumes:
   mysql_data:
   backend_gems:
   frontend_node_modules:
 
-networks:
-  expense_network:
-    driver: bridge
+# networks:
+#   expense_network:
+#     driver: bridge
