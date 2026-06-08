@@ -13,6 +13,7 @@ const HistoryPage: React.FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
   // Get year and month from URL params, default to current date if not provided
   const getInitialYearMonth = () => {
@@ -151,6 +152,9 @@ const HistoryPage: React.FC = () => {
         <Button variant="primary" onClick={() => setIsModalOpen(true)}>
           Add Expense
         </Button>
+        <Button variant="secondary" onClick={() => setIsCategoryModalOpen(true)}>
+          Add Category
+        </Button>
       </div>
 
       <MonthNavigation
@@ -183,6 +187,16 @@ const HistoryPage: React.FC = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title="Add New Expense"
+      >
+        <ExpenseForm
+          onSubmit={handleAddExpense}
+          onCancel={() => setIsModalOpen(false)}
+        />
+      </Modal>
+      <Modal
+        isOpen={isCategoryModalOpen}
+        onClose={() => setIsCategoryModalOpen(false)}
+        title="Add New Category"
       >
         <ExpenseForm
           onSubmit={handleAddExpense}
