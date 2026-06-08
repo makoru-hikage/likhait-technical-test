@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getExpenses, createExpense } from "../services/api";
+import { createCategory } from "../services/api";
 import { Expense, ExpenseFormData } from "../types";
 import YearNavigation from "../components/YearNavigation";
 import { MonthNavigation } from "../components/MonthNavigation";
@@ -80,6 +81,16 @@ const HistoryPage: React.FC = () => {
       fetchExpenses();
     } catch (error) {
       console.error("Error creating expense:", error);
+      throw error;
+    }
+  };
+
+  const handleAddCategory = async (data: CategoryFormData) => {
+    try {
+      await createCategory(data);
+      setIsCategoryModalOpen(false);
+    } catch (error) {
+      console.error("Error creating category:", error);
       throw error;
     }
   };
@@ -200,8 +211,8 @@ const HistoryPage: React.FC = () => {
         title="Add New Category"
       >
         <CategoryForm
-          onSubmit={handleAddExpense}
-          onCancel={() => setIsModalOpen(false)}
+          onSubmit={handleAddCategory}
+          onCancel={() => setIsCategoryModalOpen(false)}
         />
       </Modal>
     </div>
