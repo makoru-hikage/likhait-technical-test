@@ -6,6 +6,7 @@ import { MonthNavigation } from "../components/MonthNavigation";
 import CategoryBreakdown from "../components/CategoryBreakdown";
 import { CalendarExpenseTable } from "../components/CalendarExpenseTable";
 import { ExpenseForm } from "../components/ExpenseForm";
+import { CategoryForm } from "../components/CategoryForm";
 import { Modal, Button } from "../vibes";
 import { COLORS } from "../constants/colors";
 
@@ -198,7 +199,7 @@ const HistoryPage: React.FC = () => {
         onClose={() => setIsCategoryModalOpen(false)}
         title="Add New Category"
       >
-        <ExpenseForm
+        <CategoryForm
           onSubmit={handleAddExpense}
           onCancel={() => setIsModalOpen(false)}
         />
